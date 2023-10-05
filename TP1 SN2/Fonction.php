@@ -10,5 +10,13 @@ function Verif(){
         header('Location: connexion.php');
     }
 }
+// Fonction pour afficher le statut de l'utilisateur en tant qu'administrateur ou non
+function afficherStatutAdmin($isAdmin) {
+    if ($isAdmin) {
+        return "Oui";
+    } else {
+        return "Non";
+    }
+}
 ?>
- <h1> <b>Logitok<b></h1>
+ <h1 style="text-align: center;"> <b>Logitok<b></h1>

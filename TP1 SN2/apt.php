@@ -1,4 +1,10 @@
-<?php 
+
+
+
+
+
+
+ <?php 
 Session_start();
 
 include "BDD.php";
@@ -35,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page </title>
-    <link rel="stylesheet" href="delete.css">
+    <link rel="stylesheet" href="main.css">
     <script>
         function toggleSelectAll() {
             const checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -59,7 +65,7 @@ $query = "SELECT * FROM user";
  <!-- Formulaire pour supprimer un utilisateur -->
 
  <!-- Affichage du tableau des utilisateurs -->
- <table border='3' style="background-color:white; margin:auto;">
+ <table border='1'>
         <tr><th>choisir</th><th>ID</th><th>pseudo</th><th>MDP</th><th>admin</th></tr>
         <form method="POST" action="">
         
@@ -79,12 +85,12 @@ $query = "SELECT * FROM user";
             }
             ?>
         </tr>
-        <input style="margin-left:45%;" type="checkbox" id="selectAll" onchange="toggleSelectAll()">
-        <label style="margin-left:45%;" for="selectAll">Select All</label>
+        <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+        <label for="selectAll">Select All</label>
     </table>
     
     <!-- Bouton pour supprimer les utilisateurs sélectionnés -->
-    <input style="margin-left:45%;" type="submit" name="deleteSelected" value="Delete Selected">
+    <input type="submit" name="deleteSelected" value="Delete Selected">
     </form>
 </body>
 </html>

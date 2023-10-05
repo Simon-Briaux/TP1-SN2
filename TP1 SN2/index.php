@@ -17,16 +17,17 @@ Verif();
     <link rel="stylesheet" href="main.css">
 </head>
 <body>
+
 <nav>
   <ul>
-    <li style="float: left;margin-top: 20px;"><form method=POST>
-            <input type="submit" name="Exit" value="Se deconnecter">
-            </form></li>
     <li><a href="Ajouter.php">Ajouter un User</a></li>
     <li><a href="Update.php">Modifier un User</a></li>
     <li><a href="delete.php">Supprimer un User</a></li>
-    
-    
+    <li style="float: left;margin-top: 20px;">
+      <form method="POST">
+        <input type="submit" name="Exit" value="Se deconnecter">
+      </form>
+    </li>
   </ul>
 </nav>
 </body>

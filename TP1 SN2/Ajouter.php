@@ -1,6 +1,11 @@
 <?php
 session_start();	// Nous connect à la base de donnee
 include "BDD.php";
+include "Fonction.php";
+
+Deconnexion();
+
+Verif();
 
 
 ?>
@@ -10,49 +15,67 @@ include "BDD.php";
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion</title>
+    <title>Ajout d'utilisateur</title>
     <link rel="stylesheet" href="main.css">
 
 </head>
 <body class="bodyCo">
-    <?php
+<?php
+     
     if(isset($_POST["connexionSubmit"])){
         if(!empty($_POST["pseudo"]) && !empty($_POST["MDP"])){
 
             $pseudo = $_POST["pseudo"];
             $MDP = $_POST["MDP"];
-            $req = "INSERT INTO `user`(`pseudo`, `MDP`) VALUES (??)";
-            $RequeteStatement = $BasePDO->query($req);
-            
-            $userData = $RequeteStatement->fetch();
-            if(!empty($userData['pseudo']) && !empty($userData['MDP'])){
-                $_SESSION['id'] = $userData['id'];
-                $_SESSION['pseudo'] = $userData['pseudo'];
-                $_SESSION['MDP'] = $userData['MDP'];
-                header("Location: index.php");
-                echo"l'utisateur a ete ajouter avec succes";
+            $isAdmin = isset($_POST['admin']) ? 1 : 0;
 
-            }else{
+            // Ajoutez "1 " ou "0 " devant le pseudo en fonction de la case à cocher "admin"
+            $pseudoAjuste = $isAdmin ? '1 ' . $pseudo : '0 ' . $pseudo;
+
+            $req = "INSERT INTO `user`(`pseudo`, `MDP`, `admin`) VALUES (?,?,?)";
+            $RequeteStatement = $BasePDO->prepare($req);
+            $RequeteStatement->execute([$pseudo, $MDP, $isAdmin]);
+            
+            $_SESSION['id'] = $userData['id'];
+            $_SESSION['pseudo'] = $userData['pseudo'];
+            $_SESSION['MDP'] = $userData['MDP'];
+            $_SESSION['admin'] = $isAdmin;
+
+            // Afficher les détails de l'utilisateur
+            echo "<h2>Vous avez ajoute:</h2>";
+            echo "<p><strong>Nom :</strong> $pseudo</p>";
+            echo "<p><strong>Est-il administrateur? :</strong> " . afficherStatutAdmin($isAdmin) . "</p>";
+
+        }
+        else{
                 echo "echec d'ajout</p1>";
             }
-           
+        if ($RequeteStatement === false) {
+                die('Erreur SQL : ' . $BasePDO->errorInfo()[2]);
         }
-    }    
-    ?>
-    <H1>Connexion </H1>
+            
+            
+    }
+    
+?>
+    <H1>Ajout d'utilisateur </H1>
     <div class="formulaire">
         <form action="" id="login-form" method="post">
-            <h2 style="text-align:center;">Login</h2>
+            <h2 style="text-align:center;">Inscription</h2>
             <div class="group-form">
                <input type="text" class="fat" name="pseudo" id="pseudo" required>
-               <label for="pseudo">first name</label>
+               <label for="pseudo">Pseudo</label>
             </div>
             <div class="group-form">
                 <input type="password"   class="fat" name="MDP" id="MDP" required>
-                <label for="MDP" class="text-info">Password</label>
+                <label for="MDP" class="text-info">Mot De Passe</label>
+            </div>
+            <div>
+                <input type="checkbox" class ="fat" id="isAdmin" name="admin"><br><br>
+                <label for="admin">Est administrateur:</label>
             </div>
             <div class="group-form">
-                <input type="submit" name="connexionSubmit" value="Connexion" class="fat">
+                <input type="submit" name="connexionSubmit" value="Ajouter un user" class="fat">
             </div>
            
         </form>
@@ -61,44 +84,3 @@ include "BDD.php";
     
 </body>
 </html>
-<!--
- if(isset($_POST["inscriptionSubmit"])){
-        if(!empty($_POST["pseudo"]) && !empty($_POST["MDP"])){
-
-            $Pseudo = $_POST["pseudo"];
-            $mdp = $_POST["MDP"];
-            #"Admin"
-
-            $req = "INSERT INTO User (pseudo,MDP,admin) VALUES ('".$pseudo."','".$MDP."','".$admin."'))";
-            $RequeteStatement = $BasePDO->query($req);
-            
-            if($RequeteStatement){
-                if($RequeteStatement->errorCode()=='00000'){
-                    header("Location: index.php");
-            }
-        }
-    }
-}    
-    ?>
-    <H1>Inscription </H1>
-    <div class="formulaire">
-        <form action="" method="post" class="formConnexion">
-            <h3 style="text-align:center;">Register</h3>
-        <div class="form-example">
-                <label for="Pseudo">Pseudo : </label>
-                <input type="text" name="Pseudo" id="Pseudo" required>
-            </div>
-            <div class="form-example">
-                <label for="mdp">Mot de passe : </label>
-                <input type="password" name="mdp" id="mdp" required>
-            </div>
-            <div class="form-example">
-                <input type="submit" name="inscriptionSubmit" value="S'inscrire" class="btnConnexion">
-            </div>
-
-            <div class="form-example">
-                <a href="connexion.php">Retour</a>
-            </div>
-        </form>
-    </div>
--->

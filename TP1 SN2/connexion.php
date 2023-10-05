@@ -33,6 +33,7 @@ if ((!empty($_SESSION['id'])) AND (!empty($_SESSION['pseudo'])) AND (!empty($_SE
                 $_SESSION['id'] = $userData['id'];
                 $_SESSION['pseudo'] = $userData['pseudo'];
                 $_SESSION['MDP'] = $userData['MDP'];
+                $_SESSION['isAdmin'] = $userData['isAdmin'];
                 header("Location: index.php");
 
             }else{
