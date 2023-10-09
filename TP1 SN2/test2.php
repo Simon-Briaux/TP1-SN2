@@ -12,6 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST["updateSelected"])) {
         // Mettre à jour les utilisateurs sélectionnés
         if (isset($_POST["selectedIds"])) {
+
             foreach ($_POST["selectedIds"] as $userId) {
                 // Récupérer les valeurs des champs de formulaire
                 $newPseudo = $_POST["pseudo_" . $userId];
@@ -28,15 +29,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         ':pseudo' => $newPseudo,
                         ':MDP' => $newMDP,
                         ':admin' => $newAdmin
-                        echo "L'utilisateur avec l'ID $userId a été mis à jour avec $field = $newValue.";
                     ]);
-                    }
+                    
                 } catch (Exception $e) {
                     echo "Erreur : " . $e->getMessage();
                 }
             }
             echo "Les utilisateurs sélectionnés ont été mis à jour.";
         }
+    }
 }
 ?>
 
