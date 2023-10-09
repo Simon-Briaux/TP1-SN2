@@ -17,7 +17,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Requête SQL UPDATE pour mettre à jour le champ de l'utilisateur
         $updateQuery = "UPDATE user SET $field = :newValue WHERE id = :id";
-  
 
         try {
             $stmt = $BasePDO->prepare($updateQuery);
@@ -43,14 +42,15 @@ try {
         // Afficher les résultats dans un tableau
         echo "<h2>Liste des utilisateurs</h2>";
         echo "<table border='1'>";
-        echo "<tr><th>ID</th><th>Pseudo</th><th>Mot de passe</th><th>Admin</th></tr>";
+        echo "<tr><th>ID</th><th>Pseudo</th><th>Mot de passe</th><th>Admin</th><th>Action</th></tr>";
 
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
             echo "<tr>";
             echo "<td>" . $row['id'] . "</td>";
-            echo "<td><span class='editable' data-id='" . $row['id'] . "' data-field='pseudo'>" . $row['pseudo'] . "</span></td>";
-            echo "<td><span class='editable' data-id='" . $row['id'] . "' data-field='MDP'>" . $row['MDP'] . "</span></td>";
+            echo "<td><input class='editable' data-id='" . $row['id'] . "' data-field='pseudo' value='" . $row['pseudo'] . "'></td>";
+            echo "<td><input class='editable' data-id='" . $row['id'] . "' data-field='MDP' value='" . $row['MDP'] . "'></td>";
             echo "<td>" . $row['admin'] . "</td>";
+            echo "<td><button class='save-button' data-id='" . $row['id'] . "'>Enregistrer</button></td>";
             echo "</tr>";
         }
 
@@ -62,33 +62,32 @@ try {
     echo "Erreur : " . $e->getMessage();
 }
 ?>
-<script>
-document.addEventListener('click', function(event) {
-    const target = event.target;
-    if (target.classList.contains('editable')) {
-        const userId = target.getAttribute('data-id');
-        const field = target.getAttribute('data-field');
-        const newValue = prompt('Nouvelle valeur pour ' + field + ' :', target.innerText);
-        if (newValue !== null) {
-            // Envoyer la mise à jour au serveur
-            const formData = new FormData();
-            formData.append('id', userId);
-            formData.append('field', field);
-            formData.append('newValue', newValue);
 
-            fetch('Update.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.text())
-            .then(data => {
-                alert(data);  // Afficher la réponse du serveur
-                if (data.startsWith('L\'utilisateur')) {
-                    target.innerText = newValue;
-                }
-            })
-            .catch(error => console.error('Erreur :', error));
-        }
+<script>
+   document.addEventListener('click', function(event) {
+    const target = event.target;
+    if (target.classList.contains('save-button')) {
+        const userId = target.getAttribute('data-id');
+        const pseudo = document.querySelector(`.editable[data-id="${userId}"][data-field="pseudo"]`).value;
+        const MDP = document.querySelector(`.editable[data-id="${userId}"][data-field="MDP"]`).value;
+
+        const formData = new FormData();
+        formData.append('update', true);
+        formData.append('id', userId);
+        formData.append('field', 'pseudo');
+        formData.append('newValue', pseudo);
+
+        // Envoyer la mise à jour au serveur
+        fetch('', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);  // Afficher la réponse du serveur
+        })
+        .catch(error => console.error('Erreur :', error));
     }
 });
+
 </script>
